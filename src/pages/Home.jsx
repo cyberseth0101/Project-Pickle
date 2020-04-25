@@ -3,6 +3,7 @@ import { Howl, Howler } from 'howler';
 import { PitchShifter } from 'soundtouchjs';
 
 class Home extends Component {
+    state = { data: -1, cycleFile: ["/im.mp3", "/pickle.mp3", "/rick.mp3"], pitch: 1  };
 
     constructor(props) {
         super(props);
@@ -10,28 +11,44 @@ class Home extends Component {
         // This binding is necessary to make `this` work in the callback
         this.handleClick = this.handleClick.bind(this);
         this.keyDown = this.keyDown.bind(this);
+        this.keyUp = this.keyUp.bind(this);
     }
 
     keyDown(event) {
+        
+
+        let cycle = this.state.data;
+        if (cycle >= 2) {
+            cycle = 0;
+        }
+        else {
+            cycle = cycle + 1;
+        }
+
+        this.setState({cycleFile: this.state.cycleFile, data: cycle, pitch: this.state.pitch + .05 });
         console.log(event)
         if (event.key === "a") {
             console.log("PRessed a")
-            this.shiftPitch(1).send();
-            //Do whatever when esc is pressed
+            this.shiftPitch(this.state.pitch, "/rick.wav").send();
         }
         else if (event.key === "s") {
-            this.shiftPitch(1.05).send();
+            this.shiftPitch(1, "/rick.wav").send();
         }
         else if (event.key === "d") {
-            this.shiftPitch(1.10).send();
+            this.shiftPitch(1, "/rick.wav", 5).send();
         }
 
     }
 
+    keyUp(event) {
+        console.log("KEY UPss")
 
-    shiftPitch(pitch) {
+    }
+
+
+    shiftPitch(pitch, file, duration) {
         var context = new AudioContext(), request = new XMLHttpRequest();
-        request.open("GET", "/rick.mp3", true);
+        request.open("GET", file, true);
         request.responseType = "arraybuffer";
         request.onload = function () {
             context.decodeAudioData(request.response, onDecoded);
@@ -44,11 +61,18 @@ class Home extends Component {
             let shifter = new PitchShifter(context, buffer, 1024);
 
             shifter.on('play', (detail) => {
+                console.log(detail)
                 if (detail.percentagePlayed >= 100) {
                     shifter.disconnect();
                 }
             });
-            shifter.tempo = 1;
+            if(duration) {
+                shifter.tempo = shifter.duration/duration;
+            }
+            else {
+                shifter.tempo = 1;
+            }
+            
             shifter.pitch = pitch;
 
             shifter.connect(gainNode);
@@ -62,9 +86,11 @@ class Home extends Component {
 
     componentDidMount() {
         document.addEventListener("keydown", this.keyDown, false);
+        document.addEventListener("keyup", this.keyUp, false);
     }
     componentWillUnmount() {
         document.removeEventListener("keydown", this.keyDown, false);
+        document.removeEventListener("keyup", this.keyUp, false);
     }
 
 
@@ -72,9 +98,11 @@ class Home extends Component {
     handleClick() {
 
         var soundPlayer = new Audio();
-        soundPlayer.src = "/im.mp3";
+        soundPlayer.src = "/pickle.mp3";
+        
         soundPlayer.mozPreservesPitch = true;
         soundPlayer.playbackRate = 0.1;
+        console.log(soundPlayer)
         soundPlayer.play();
     }
 
