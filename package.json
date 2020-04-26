@@ -19,7 +19,8 @@
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "soundtouchjs": "^0.1.19"
+    "soundtouchjs": "^0.1.19",
+    "tone": "^13.8.25"
   },
   "scripts": {
     "start": "react-scripts start",

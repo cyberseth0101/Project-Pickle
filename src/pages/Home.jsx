@@ -1,109 +1,121 @@
 import React, { Component } from 'react';
 import { PitchShifter } from 'soundtouchjs';
-import listReactFiles from 'list-react-files'
+
 
 class Home extends Component {
-    state = { data: -1, cycleFile: ["/im.mp3", "/pickle.mp3", "/rick.mp3"], pitch: 4 };
+    state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0 };
+
+    
 
     constructor(props) {
         super(props);
 
         // This binding is necessary to make `this` work in the callback
         this.handleClick = this.handleClick.bind(this);
-        this.handleClick2 = this.handleClick2.bind(this);
+        this.playMidi = this.playMidi.bind(this);
         this.keyDown = this.keyDown.bind(this);
     }
 
 
 
+
     keyDown(event) {
+        let defaultKeys = {rick: {note: "E4", midi: 64 }}
 
-        let rickScale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-        let midiNumber = 64;
+        let sound = this.state.cyclePickleRick[this.state.cycle] + "_" + defaultKeys[this.state.cyclePickleRick[this.state.cycle]].note + ".mp3"
 
+        let midi = defaultKeys[this.state.cyclePickleRick[this.state.cycle]].midi;
 
-        let cycle = this.state.data;
-        if (cycle >= 2) {
-            cycle = 0;
-        }
-        else {
-            cycle = cycle + 1;
-        }
-        
-        // console.log(event)
+        this.cycleSound();
+        let pitch = (this.state.pitch - 1) * 12;
+
         if (event.key === "a") {
-            this.playNote("C"+this.state.pitch);
+            // this.playNote("C" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 60)), "/"+sound).send();
         }
         else if (event.key === "s") {
-            this.playNote("D"+this.state.pitch);
+
+            this.shiftPitch(1 - (.05 * (midi - 62)), "/"+sound).send();
         }
         else if (event.key === "d") {
-            this.playNote("E"+this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 64)), "/"+sound).send();
         }
         else if (event.key === "w") {
-            this.playNote("Csharp"+this.state.pitch);
+            // this.playNote("Csharp" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 61)), "/"+sound).send();
         }
         else if (event.key === "e") {
-            this.playNote("Dsharp"+this.state.pitch);
+            // this.playNote("Dsharp" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 63)), "/"+sound).send();
         }
         else if (event.key === "f") {
-            this.playNote("F"+this.state.pitch);
+            // this.playNote("F" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 65)), "/"+sound).send();
         }
         else if (event.key === "g") {
-            this.playNote("G"+this.state.pitch);
+            // this.playNote("G" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 67)), "/"+sound).send();
         }
         else if (event.key === "h") {
-            this.playNote("A"+this.state.pitch);
+            // this.playNote("A" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 69)), "/"+sound).send();
         }
         else if (event.key === "j") {
-            this.playNote("B"+this.state.pitch);
+            // this.playNote("B" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * (midi - 71)), "/"+sound).send();
         }
         else if (event.key === "k") {
-            let x = this.state.pitch+1
-            this.playNote("C"+x);
+            let x = this.state.pitch + 1
+            // this.playNote("C" + x);
+            this.shiftPitch(1 - (.05 * ((midi - 60-12))), "/"+sound).send();
         }
         else if (event.key === "l") {
-            let x = this.state.pitch+1
-            this.playNote("D"+x);
+            let x = this.state.pitch + 1
+            // this.playNote("C" + x);
+            this.shiftPitch(1 - (.05 * ((midi - 62 - 12))), "/"+sound).send();
         }
         else if (event.key === ";") {
-            let x = this.state.pitch+1
-            this.playNote("E"+x);
+            let x = this.state.pitch + 1
+            // this.playNote("E" + x);
+            this.shiftPitch(1 - (.05 * ((midi - 64 - 12))), "/"+sound).send();
         }
         else if (event.key === "'") {
-            let x = this.state.pitch+1
-            this.playNote("F"+x);
+            let x = this.state.pitch + 1
+            // this.playNote("F" + x);
+            this.shiftPitch(1 - (.05 * ((midi - 65 - 12))), "/"+sound).send();
         }
         else if (event.key === "t") {
-            this.playNote("Fsharp"+this.state.pitch);
+            // this.playNote("Fsharp" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * ((midi - 66))), "/"+sound).send();
         }
         else if (event.key === "y") {
-            this.playNote("Gsharp"+this.state.pitch);
+            // this.playNote("Gsharp" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * ((midi - 68))), "/"+sound).send();
         }
         else if (event.key === "u") {
-            this.playNote("Asharp"+this.state.pitch);
+            // this.playNote("Asharp" + this.state.pitch);
+            this.shiftPitch(1 - (.05 * ((midi - 70))), "/"+sound).send();
         }
         else if (event.key === "o") {
-            let x = this.state.pitch+1
-            this.playNote("Csharp"+x);
+            let x = this.state.pitch + 1
+            // this.playNote("Csharp" + x);
+            this.shiftPitch(1 - (.05 * ((midi - 61 - 12))), "/"+sound).send();
         }
         else if (event.key === "p") {
-            let x = this.state.pitch+1
-            this.playNote("Dsharp"+x);
+            let x = this.state.pitch + 1
+            // this.playNote("Dsharp" + x);
+            this.shiftPitch(1 - (.05 * ((midi - 63 - 12))), "/"+sound).send();
         }
 
 
 
     }
 
-    experimental(json, allNotes, midiNumber) {
+    experimental(json, midiNumber) {
         json.tracks[0].notes.forEach(element => {
-            console.log(element);
+            // console.log(element);
             // console.log(1 - (.05 * (midiNumber - element.midi)));
             // console.log(element.time*1000)
-            if (!allNotes.includes(element.name)) {
-                allNotes.push(element.name);
-            }
             setTimeout(() => {
                 this.shiftPitch(1 - (.05 * (midiNumber - element.midi)), "/rick.wav", element.duration).send();
             }, element.time * 1000);
@@ -120,7 +132,6 @@ class Home extends Component {
         };
         function onDecoded(buffer) {
 
-            // console.log(buffer.length)
             var bufferSource = context.createBufferSource();
             const gainNode = context.createGain();
             bufferSource.buffer = buffer;
@@ -128,19 +139,16 @@ class Home extends Component {
             let shifter = new PitchShifter(context, buffer, 4096);
 
             shifter.on('play', (detail) => {
+                console.log(buffer)
+                console.log(bufferSource)
                 if (detail.percentagePlayed >= 100) {
-                    shifter.disconnect();
-
+                    shifter.disconnect(gainNode);
                 }
             });
-            if (false) {
-                shifter.tempo = shifter.duration / duration;
-            }
-            else {
-                shifter.tempo = 1;
-            }
 
+            shifter.tempo = 1;
             shifter.pitch = pitch;
+
             shifter.connect(gainNode);
             gainNode.connect(context.destination);
             bufferSource.connect(context.destination);
@@ -162,29 +170,68 @@ class Home extends Component {
 
 
     handleClick() {
-        this.playAudio();
+        // this.playAudio();
+        let json = require('./mario.json')
+        this.experimental(json, 64)
+        // this.toneShift();
     }
 
-    handleClick2() {
-        let json = require('./newworld.json')
-        json.tracks[0].notes.forEach(element => {
-            console.log(element);
-            setTimeout(() => {
-                this.playNote(element.name);
-            }, element.time * 1000);
-        });
+    playMidi() {
+        let json = require('./dmc.json')
+        this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: this.state.cycle })
+
+        // json.tracks[0].notes.forEach(element => {
+        //     if (!allNotes.includes(element.name)) {
+        //         allNotes.push(element.name);
+        //     }
+        //     setTimeout(() => {
+        //         this.playNote(element.name);
+        //     }, element.time * 1000);
+        // });
+        // json.tracks[1].notes.forEach(element => {
+        //     if (!allNotes.includes(element.name)) {
+        //         allNotes.push(element.name);
+        //     }
+        //     setTimeout(() => {
+        //         this.playNote(element.name);
+        //     }, element.time * 1000);
+        // });
+        let allNotes = []
+        json.tracks.forEach(track => {
+            // console.log(track)
+            track.notes.forEach(element => {
+                if (!allNotes.includes(element.name)) {
+                    allNotes.push(element.name);
+                }
+                setTimeout(() => {
+                    this.playNote(element.name);
+                }, element.time * 1000);
+            });
+        })
+
+        console.log(allNotes)
     }
 
     playNote(note) {
+        console.log("playing note" + note)
+
+
         note = note.replace("#", "sharp")
         var soundPlayer = new Audio();
-        soundPlayer.src = "./rick_" + note + ".mp3";
+        soundPlayer.src = "./" + this.state.cyclePickleRick[this.state.cycle] + "_" + note + ".mp3";
         console.log(soundPlayer.src);
         soundPlayer.mozPreservesPitch = true;
         soundPlayer.playbackRate = 1;
         soundPlayer.play();
+        this.cycleSound();
+
     }
 
+
+    cycleSound() {
+        let cycle = this.state.cycle >= this.state.cyclePickleRick.length - 1 ? 0 : this.state.cycle + 1;
+        this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: cycle });
+    }
 
     playAudio() {
         var soundPlayer = new Audio();
@@ -200,7 +247,7 @@ class Home extends Component {
         return (
             <div>
                 <button onClick={this.handleClick}>HI</button>
-                <button onClick={this.handleClick2}>mario song</button>
+                <button onClick={this.playMidi}>mario song</button>
             </div>
         )
     };
