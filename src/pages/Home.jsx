@@ -3,7 +3,7 @@ import { PitchShifter } from 'soundtouchjs';
 
 
 class Home extends Component {
-    state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0 };
+    state = { cyclePickleRick: ["pickle"], pitch: 4, cycle: 0 };
 
     
 
@@ -20,9 +20,11 @@ class Home extends Component {
 
 
     keyDown(event) {
-        let defaultKeys = {rick: {note: "E4", midi: 64 }}
+        let defaultKeys = {rick: {note: "E4", midi: 64 }, pickle: {note: "Dsharp4", midi: 63 }}
 
         let sound = this.state.cyclePickleRick[this.state.cycle] + "_" + defaultKeys[this.state.cyclePickleRick[this.state.cycle]].note + ".mp3"
+
+        console.log(sound)
 
         let midi = defaultKeys[this.state.cyclePickleRick[this.state.cycle]].midi;
 
@@ -30,81 +32,82 @@ class Home extends Component {
         let pitch = (this.state.pitch - 1) * 12;
 
         if (event.key === "a") {
-            // this.playNote("C" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 60)), "/"+sound).send();
+            this.playNote("C" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 60)), "/"+sound).send();
         }
         else if (event.key === "s") {
-
-            this.shiftPitch(1 - (.05 * (midi - 62)), "/"+sound).send();
+            this.playNote("D" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 62)), "/"+sound).send();
         }
         else if (event.key === "d") {
-            this.shiftPitch(1 - (.05 * (midi - 64)), "/"+sound).send();
+            // this.shiftPitch(1 - (.05 * (midi - 64)), "/"+sound).send();
+            this.playNote("E" + this.state.pitch);
         }
         else if (event.key === "w") {
-            // this.playNote("Csharp" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 61)), "/"+sound).send();
+            this.playNote("Csharp" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 61)), "/"+sound).send();
         }
         else if (event.key === "e") {
-            // this.playNote("Dsharp" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 63)), "/"+sound).send();
+            this.playNote("Dsharp" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 63)), "/"+sound).send();
         }
         else if (event.key === "f") {
-            // this.playNote("F" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 65)), "/"+sound).send();
+            this.playNote("F" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 65)), "/"+sound).send();
         }
         else if (event.key === "g") {
-            // this.playNote("G" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 67)), "/"+sound).send();
+            this.playNote("G" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 67)), "/"+sound).send();
         }
         else if (event.key === "h") {
-            // this.playNote("A" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 69)), "/"+sound).send();
+            this.playNote("A" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 69)), "/"+sound).send();
         }
         else if (event.key === "j") {
-            // this.playNote("B" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * (midi - 71)), "/"+sound).send();
+            this.playNote("B" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * (midi - 71)), "/"+sound).send();
         }
         else if (event.key === "k") {
             let x = this.state.pitch + 1
-            // this.playNote("C" + x);
-            this.shiftPitch(1 - (.05 * ((midi - 60-12))), "/"+sound).send();
+            this.playNote("C" + x);
+            // this.shiftPitch(1 - (.05 * ((midi - 60-12))), "/"+sound).send();
         }
         else if (event.key === "l") {
             let x = this.state.pitch + 1
-            // this.playNote("C" + x);
-            this.shiftPitch(1 - (.05 * ((midi - 62 - 12))), "/"+sound).send();
+            this.playNote("D" + x);
+            // this.shiftPitch(1 - (.05 * ((midi - 62 - 12))), "/"+sound).send();
         }
         else if (event.key === ";") {
             let x = this.state.pitch + 1
-            // this.playNote("E" + x);
-            this.shiftPitch(1 - (.05 * ((midi - 64 - 12))), "/"+sound).send();
+            this.playNote("E" + x);
+            // this.shiftPitch(1 - (.05 * ((midi - 64 - 12))), "/"+sound).send();
         }
         else if (event.key === "'") {
             let x = this.state.pitch + 1
-            // this.playNote("F" + x);
-            this.shiftPitch(1 - (.05 * ((midi - 65 - 12))), "/"+sound).send();
+            this.playNote("F" + x);
+            // this.shiftPitch(1 - (.05 * ((midi - 65 - 12))), "/"+sound).send();
         }
         else if (event.key === "t") {
-            // this.playNote("Fsharp" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * ((midi - 66))), "/"+sound).send();
+            this.playNote("Fsharp" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * ((midi - 66))), "/"+sound).send();
         }
         else if (event.key === "y") {
-            // this.playNote("Gsharp" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * ((midi - 68))), "/"+sound).send();
+            this.playNote("Gsharp" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * ((midi - 68))), "/"+sound).send();
         }
         else if (event.key === "u") {
-            // this.playNote("Asharp" + this.state.pitch);
-            this.shiftPitch(1 - (.05 * ((midi - 70))), "/"+sound).send();
+            this.playNote("Asharp" + this.state.pitch);
+            // this.shiftPitch(1 - (.05 * ((midi - 70))), "/"+sound).send();
         }
         else if (event.key === "o") {
             let x = this.state.pitch + 1
-            // this.playNote("Csharp" + x);
-            this.shiftPitch(1 - (.05 * ((midi - 61 - 12))), "/"+sound).send();
+            this.playNote("Csharp" + x);
+            // this.shiftPitch(1 - (.05 * ((midi - 61 - 12))), "/"+sound).send();
         }
         else if (event.key === "p") {
             let x = this.state.pitch + 1
-            // this.playNote("Dsharp" + x);
-            this.shiftPitch(1 - (.05 * ((midi - 63 - 12))), "/"+sound).send();
+            this.playNote("Dsharp" + x);
+            // this.shiftPitch(1 - (.05 * ((midi - 63 - 12))), "/"+sound).send();
         }
 
 
@@ -146,7 +149,7 @@ class Home extends Component {
                 }
             });
 
-            shifter.tempo = 1;
+            // shifter.tempo = 1;
             shifter.pitch = pitch;
 
             shifter.connect(gainNode);
