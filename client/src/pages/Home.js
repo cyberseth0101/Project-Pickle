@@ -3,7 +3,7 @@ import { PitchShifter } from 'soundtouchjs';
 
 
 class Home extends Component {
-    state = { cyclePickleRick: ["pickle"], pitch: 4, cycle: 0 };
+    state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0 };
 
     
 
@@ -174,13 +174,13 @@ class Home extends Component {
 
     handleClick() {
         // this.playAudio();
-        let json = require('./mario.json')
+        let json = require('./dmc.json')
         this.experimental(json, 64)
         // this.toneShift();
     }
 
     playMidi() {
-        let json = require('./dmc.json')
+        let json = require('./zelda.json')
         this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: this.state.cycle })
 
         // json.tracks[0].notes.forEach(element => {
