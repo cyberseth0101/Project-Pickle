@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { PitchShifter } from 'soundtouchjs';
 import MediaGrid from '../components/MediaGrid';
-import { Button } from 'semantic-ui-react';
-
-
+import { Button, Container, Divider, Segment } from 'semantic-ui-react';
+import '../style/keyboard.css'
 class Home extends Component {
     state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0, persons: [], notes: [], audio: new Audio() };
 
@@ -109,6 +108,18 @@ class Home extends Component {
             this.playNote("Dsharp" + x);
             // this.shiftPitch(1 - (.05 * ((midi - 63 - 12))), "/"+sound).send();
         }
+
+        console.log("key press")
+        const key = document.querySelector(`div[data-key="${event.keyCode}"]`);
+        // const audio = document.querySelector(`audio`);
+
+        if (!key) { return; }
+
+        // audio.currentTime = 0;
+        // audio.play();
+        key.classList.add("pressed");
+        const keys = document.querySelectorAll('.key, .sharpkey');
+        keys.forEach(key => key.addEventListener('transitionend', this.removeTransition));
 
 
 
@@ -218,6 +229,12 @@ class Home extends Component {
         console.log(allNotes)
     }
 
+    removeTransition(e) {
+        if (e.propertyName !== 'transform') return;
+        console.log(e.keyCode + " transition ended");
+        this.classList.remove('pressed');
+    }
+
     playNote(note) {
         console.log("playing note" + note)
 
@@ -299,16 +316,91 @@ class Home extends Component {
     render() {
 
         return (
-
             <div>
-                <div>
-                    {this.getMedia()}
-                </div>
-                <div>
-                    <Button onClick={this.handleClick}>HI</Button>
-                    <Button onClick={this.playMidi}>Now it's zelda</Button>
-                    <button onClick={this.playAudio}>Angels</button>
-                </div>
+                <Segment>
+
+                    <div>
+                        <Button onClick={this.handleClick}>HI</Button>
+                        <Button onClick={this.playMidi}>Now it's zelda</Button>
+                        <button onClick={this.playAudio}>Angels</button>
+                    </div>
+                    </Segment>
+                    <div>
+                        {this.getMedia()}
+                    </div>
+
+
+                <Segment>
+
+                    <div class="keys">
+                        <div class="blankkey" />
+                        <div data-key="87" class="sharpkey">
+                            <kbd>W</kbd>
+                        </div>
+                        <div data-key="69" class="sharpkey">
+                            <kbd>E</kbd>
+                        </div>
+                        <div class="blankkey" />
+                        <div data-key="84" class="sharpkey">
+                            <kbd>T</kbd>
+                        </div>
+                        <div data-key="89" class="sharpkey">
+                            <kbd>Y</kbd>
+                        </div>
+                        <div data-key="85" class="sharpkey">
+                            <kbd>U</kbd>
+                        </div>
+                        <div class="blankkey" />
+                        <div data-key="79" class="sharpkey">
+                            <kbd>O</kbd>
+                        </div>
+                        <div data-key="80" class="sharpkey">
+                            <kbd>P</kbd>
+                        </div>
+                        <div class="blankkey" />
+                        <div class="blankkey" />
+                        <div class="blankkey" />
+                    </div>
+
+                    {/* <!-- A through Enter--> */}
+                    <div class="keys2">
+                        <div data-key="65" class="key">
+                            <kbd>A</kbd>
+                        </div>
+                        <div data-key="83" class="key">
+                            <kbd>S</kbd>
+                        </div>
+                        <div data-key="68" class="key">
+                            <kbd>D</kbd>
+                        </div>
+                        <div data-key="70" class="key">
+                            <kbd>F</kbd>
+                        </div>
+                        <div data-key="71" class="key">
+                            <kbd>G</kbd>
+                        </div>
+                        <div data-key="72" class="key">
+                            <kbd>H</kbd>
+                        </div>
+                        <div data-key="74" class="key">
+                            <kbd>J</kbd>
+                        </div>
+                        <div data-key="75" class="key">
+                            <kbd>K</kbd>
+                        </div>
+                        <div data-key="76" class="key">
+                            <kbd>L</kbd>
+                        </div>
+                        <div data-key="186" class="key">
+                            <kbd>:</kbd>
+                            <kbd>;</kbd>
+                        </div>
+                        <div data-key="222" class="key">
+                            <kbd>"</kbd>
+                            <kbd>'</kbd>
+                        </div>
+                    </div>
+                </Segment>
             </div>
         )
     };

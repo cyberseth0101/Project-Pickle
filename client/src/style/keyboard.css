@@ -1,0 +1,87 @@
+.keys
+{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    width: 90%;
+    /* /* position: 'absolute'; */
+    
+    /* height: 40; */
+    left: 18%;
+    /* top: WINDOW_HEIGHT - 40; */
+    
+    /* bottom: 0; */ 
+    position: 'center';
+    bottom:20%;
+    position:fixed;
+    z-index:150;
+    _position:absolute;
+    height:20%;
+
+}
+
+.keys2
+{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    width: 90%;
+    /* /* position: 'absolute'; */
+    
+    /* height: 40; */
+    left: 20%;
+    /* top: WINDOW_HEIGHT - 40; */
+    
+    /* bottom: 0; */ 
+    position: 'center';
+    bottom:0;
+    position:fixed;
+    z-index:150;
+    _position:absolute;
+    height:20%;
+
+}
+
+.key
+{
+    background:white;
+    border:4px solid black;
+    color:#fac863;
+    text-align: center;
+    width: 100px;
+    padding: 1rem 0.5rem;
+    transition: all 0.05s;
+}
+
+.blankkey
+{
+    text-align: center;
+    width: 100px;
+    height: 200px;
+    padding: 1rem 0.5rem;
+    /* transition: all 0.05s; */
+}
+
+.sharpkey
+{
+    background:#1f1f1f;
+    border:4px solid black;
+    color:#fac863;
+    text-align: center;
+    width: 100px;
+    padding: 1rem 0.5rem;
+    transition: all 0.05s;
+}
+
+.pressed
+{
+    transform:scale(1.1);
+    border-color:#fac863;
+    box-shadow:0 0 10px #fac863;
+}
+
+kbd
+{
+    display: block;
+    font-size:20px;
+}

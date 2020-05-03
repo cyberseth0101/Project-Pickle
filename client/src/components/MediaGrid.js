@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Grid, Image } from 'semantic-ui-react';
-import { connect } from 'react-redux';
 import axios from 'axios';
+
 
 class MediaGrid extends Component {
   state = {
@@ -44,7 +44,10 @@ class MediaGrid extends Component {
         console.log(this.state)
       }))
 
+
   }
+
+
 
   createGrid() {
     let columns = [];
@@ -60,18 +63,12 @@ class MediaGrid extends Component {
   }
 
   render() {
-    console.log(this.props.soundPlaying)
     return (
-      <Container>
-        <div>
-          <Grid>
+        <Grid>
+          {this.createGrid()}
+        </Grid>
 
-            {this.createGrid()}
 
-          </Grid>
-
-        </div>
-      </Container>
     )
   }
 }
