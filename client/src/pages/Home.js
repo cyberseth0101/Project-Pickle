@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { PitchShifter } from 'soundtouchjs';
+import MediaGrid from '../components/MediaGrid';
+import { Button } from 'semantic-ui-react';
 
 
 class Home extends Component {
-    state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0 };
+    state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0, persons: [], notes: [], audio: new Audio() };
 
-    
+
 
     constructor(props) {
         super(props);
@@ -17,10 +19,8 @@ class Home extends Component {
     }
 
 
-
-
     keyDown(event) {
-        let defaultKeys = {rick: {note: "E4", midi: 64 }, pickle: {note: "Dsharp4", midi: 63 }}
+        let defaultKeys = { rick: { note: "E4", midi: 64 }, pickle: { note: "Dsharp4", midi: 63 } }
 
         let sound = this.state.cyclePickleRick[this.state.cycle] + "_" + defaultKeys[this.state.cyclePickleRick[this.state.cycle]].note + ".mp3"
 
@@ -164,6 +164,9 @@ class Home extends Component {
     componentDidMount() {
         document.addEventListener("keydown", this.keyDown, false);
         document.addEventListener("keyup", this.keyUp, false);
+        document.addEventListener("onEnded", this.onEnd, false);
+
+
     }
     componentWillUnmount() {
         document.removeEventListener("keydown", this.keyDown, false);
@@ -220,37 +223,92 @@ class Home extends Component {
 
 
         note = note.replace("#", "sharp")
-        var soundPlayer = new Audio();
-        soundPlayer.src = "./" + this.state.cyclePickleRick[this.state.cycle] + "_" + note + ".mp3";
-        console.log(soundPlayer.src);
-        soundPlayer.mozPreservesPitch = true;
-        soundPlayer.playbackRate = 1;
-        soundPlayer.play();
-        this.cycleSound();
+        this.state.audio = new Audio("./" + this.state.cyclePickleRick[this.state.cycle] + "_" + note + ".mp3");
+
+        this.state.audio.mozPreservesPitch = true;
+        this.state.audio.playbackRate = 1;
+        this.state.audio.onloadedmetadata = function () {
+            setTimeout(() => {
+                this.onEnd(note);
+            }, this.state.audio.duration * 1000);
+        }.bind(this);
+
+        this.state.audio.play();
+        this.cycleSound(note);
+
 
     }
 
+    removeFirst(note, array) {
+        let newArray = [];
+        let filtered = false;
+        array.forEach(element => {
+            if (element == note && !filtered) {
+                filtered = true;
+            }
+            else {
+                newArray.push(element);
+            }
 
-    cycleSound() {
+        })
+        return newArray;
+    }
+
+    onEnd(note) {
+        console.log(note)
+        // this.state.notes = this.removeFirst(note, this.state.notes);
+        this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: this.state.cycle, notes: this.removeFirst(note, this.state.notes) });
+    }
+
+    cycleSound(note) {
         let cycle = this.state.cycle >= this.state.cyclePickleRick.length - 1 ? 0 : this.state.cycle + 1;
-        this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: cycle });
+        this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: cycle, notes: [...this.state.notes, note] });
+        // this.state.notes.push(note);
     }
 
     playAudio() {
-        var soundPlayer = new Audio();
-        soundPlayer.src = "./rick_E4.mp3";
-        soundPlayer.mozPreservesPitch = true;
-        soundPlayer.playbackRate = 1;
-        console.log(soundPlayer.length);
-        soundPlayer.play();
+        // var soundPlayer = new Audio();
+        // soundPlayer.src = "./Arms\ of\ an\ Angel.mp3";
+        // soundPlayer.mozPreservesPitch = true;
+        // soundPlayer.playbackRate = 1;
+        // console.log(soundPlayer.length);
+        // soundPlayer.play();
+
+
+        // for (let i = 0; i < 3; i) {
+        //     setTimeout(() => {
+        //         this.shiftPitch(1 - (.05 * (60-1)), "/rick.wav", element.duration).send();
+        //     }, element.time * 1000);
+        // }
+
+    }
+
+    getMedia() {
+        let removeUndefined = [];
+        this.state.notes.forEach(element => {
+            if (element) {
+                removeUndefined.push(element);
+            }
+        });
+        this.state.notes = removeUndefined;
+        return (
+            <MediaGrid soundPlaying={this.state.notes} />
+        )
     }
 
     render() {
 
         return (
+
             <div>
-                <button onClick={this.handleClick}>HI</button>
-                <button onClick={this.playMidi}>mario song</button>
+                <div>
+                    {this.getMedia()}
+                </div>
+                <div>
+                    <Button onClick={this.handleClick}>HI</Button>
+                    <Button onClick={this.playMidi}>Now it's zelda</Button>
+                    <button onClick={this.playAudio}>Angels</button>
+                </div>
             </div>
         )
     };
