@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 import { PitchShifter } from 'soundtouchjs';
 import MediaGrid from '../components/MediaGrid';
-import { Button, Container, Divider, Segment } from 'semantic-ui-react';
+import { Button, Container, Table, Segment, Form, Label, Input, Checkbox } from 'semantic-ui-react';
 import '../style/keyboard.css'
 class Home extends Component {
-    state = { cyclePickleRick: ["rick"], pitch: 4, cycle: 0, persons: [], notes: [], audio: new Audio() };
+    state = {
+        cyclePickleRick: [
+            { label: "Rick", name: "rick", checked: true },
+            { label: "Pickle 1", name: "pickle", checked: true },
+            { label: "Pickle 2", name: "picklle", checked: false }
+        ],
+        pitch: 4,
+        cycle: 0,
+        persons: [],
+        notes: [],
+        audio: new Audio()
+    };
 
 
 
@@ -15,19 +26,31 @@ class Home extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.playMidi = this.playMidi.bind(this);
         this.keyDown = this.keyDown.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+
+    }
+
+    handleInputChange(event) {
+        let index = this.state.cyclePickleRick.findIndex(function (item, i) {
+            return item.label === event.target.id
+        });
+        this.state.cyclePickleRick[index].checked = !this.state.cyclePickleRick[index].checked;
+        console.log(this.state.cyclePickleRick)
+        this.forceUpdate();
+
     }
 
 
     keyDown(event) {
         let defaultKeys = { rick: { note: "E4", midi: 64 }, pickle: { note: "Dsharp4", midi: 63 } }
 
-        let sound = this.state.cyclePickleRick[this.state.cycle] + "_" + defaultKeys[this.state.cyclePickleRick[this.state.cycle]].note + ".mp3"
+        // let sound = this.state.cyclePickleRick[this.state.cycle].name + "_" + defaultKeys[this.state.cyclePickleRick[this.state.cycle]].note + ".mp3"
 
-        console.log(sound)
+        // console.log(sound)
 
-        let midi = defaultKeys[this.state.cyclePickleRick[this.state.cycle]].midi;
+        // let midi = defaultKeys[this.state.cyclePickleRick[this.state.cycle]].midi;
 
-        this.cycleSound();
+        // this.cycleSound();
         let pitch = (this.state.pitch - 1) * 12;
 
         if (event.key === "a") {
@@ -111,13 +134,9 @@ class Home extends Component {
 
         console.log("key press")
         const key = document.querySelector(`div[data-key="${event.keyCode}"]`);
-        // const audio = document.querySelector(`audio`);
 
         if (!key) { return; }
 
-        // audio.currentTime = 0;
-        // audio.play();
-        key.classList.add("pressed");
         const keys = document.querySelectorAll('.key, .sharpkey');
         keys.forEach(key => key.addEventListener('transitionend', this.removeTransition));
 
@@ -140,6 +159,7 @@ class Home extends Component {
         var context = new AudioContext(), request = new XMLHttpRequest();
         request.open("GET", file, true);
         request.responseType = "arraybuffer";
+        console.log("hi")
         request.onload = function () {
             context.decodeAudioData(request.response, onDecoded);
 
@@ -179,6 +199,7 @@ class Home extends Component {
 
 
     }
+
     componentWillUnmount() {
         document.removeEventListener("keydown", this.keyDown, false);
         document.removeEventListener("keyup", this.keyUp, false);
@@ -240,7 +261,7 @@ class Home extends Component {
 
 
         note = note.replace("#", "sharp")
-        this.state.audio = new Audio("./" + this.state.cyclePickleRick[this.state.cycle] + "_" + note + ".mp3");
+        this.state.audio = new Audio("./" + this.state.cyclePickleRick[this.state.cycle].name + "_" + note + ".mp3");
 
         this.state.audio.mozPreservesPitch = true;
         this.state.audio.playbackRate = 1;
@@ -251,6 +272,8 @@ class Home extends Component {
         }.bind(this);
 
         this.state.audio.play();
+
+        
         this.cycleSound(note);
 
 
@@ -278,9 +301,33 @@ class Home extends Component {
     }
 
     cycleSound(note) {
-        let cycle = this.state.cycle >= this.state.cyclePickleRick.length - 1 ? 0 : this.state.cycle + 1;
+        
+        let firstCheckedElement;
+
+        for(let i = 0; i < this.state.cyclePickleRick.length; i++){
+            if(this.state.cyclePickleRick[i].checked) {
+                firstCheckedElement = i;
+                i =  this.state.cyclePickleRick.length
+            }
+        }
+
+        console.log(firstCheckedElement)
+
+
+        let cycle = this.state.cycle >= this.state.cyclePickleRick.length ? firstCheckedElement : this.state.cycle + 1;
+
+        for(let i = cycle; i < this.state.cyclePickleRick.length; i++){
+            if(!this.state.cyclePickleRick[i].checked) {
+                cycle = cycle + 1;
+            }
+        }
+
+        if(cycle > this.state.cyclePickleRick.length - 1) {
+            cycle = firstCheckedElement;
+        }
+
         this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: cycle, notes: [...this.state.notes, note] });
-        // this.state.notes.push(note);
+ 
     }
 
     playAudio() {
@@ -292,11 +339,11 @@ class Home extends Component {
         // soundPlayer.play();
 
 
-        // for (let i = 0; i < 3; i) {
-        //     setTimeout(() => {
-        //         this.shiftPitch(1 - (.05 * (60-1)), "/rick.wav", element.duration).send();
-        //     }, element.time * 1000);
-        // }
+        for (let i = 0; i < 3; i) {
+            setTimeout(() => {
+                this.shiftPitch(1 - (.05 * (64 - 1)), "./Arms\ of\ an\ Angel.mp3", 0).send();
+            }, 1000);
+        }
 
     }
 
@@ -313,21 +360,42 @@ class Home extends Component {
         )
     }
 
+    createCheckbox() {
+        let checkbox = [];
+        this.state.cyclePickleRick.forEach(element => {
+            checkbox.push(<Checkbox id={element.label} label={element.label} checked={element.checked} onChange={this.handleInputChange} />);
+            checkbox.push(<br />);
+        })
+        return checkbox;
+    }
+
     render() {
 
         return (
             <div>
                 <Segment>
+                    <Table>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                    <Button onClick={this.playMidi}>Zelda</Button>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {this.createCheckbox()}
+                                    {/* <Checkbox id="Rick" label='Rick ' checked={true} onChange={this.handleInputChange} /><br />
+                                    <Checkbox id="Pickle 1" label='Pickle 1 ' onChange={this.handleInputChange} /><br />
+                                    <Checkbox id="Pickle 2" label='Pickle 2 ' onChange={this.handleInputChange} /> */}
+                                </Table.Cell>
 
-                    <div>
-                        <Button onClick={this.handleClick}>HI</Button>
-                        <Button onClick={this.playMidi}>Now it's zelda</Button>
-                        <button onClick={this.playAudio}>Angels</button>
-                    </div>
-                    </Segment>
-                    <div>
-                        {this.getMedia()}
-                    </div>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
+
+
+                </Segment>
+                <div>
+                    {this.getMedia()}
+                </div>
 
 
                 <Segment>

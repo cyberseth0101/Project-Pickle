@@ -51,7 +51,6 @@ class MediaGrid extends Component {
 
   createGrid() {
     let columns = [];
-    console.log(this.state.redditData.length)
     this.props.soundPlaying.forEach(element => {
       columns.push(
         <Grid.Column mobile={16} tablet={8} computer={4}>
