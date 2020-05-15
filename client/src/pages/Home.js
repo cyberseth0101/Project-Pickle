@@ -216,7 +216,11 @@ class Home extends Component {
 
     playMidi() {
         let json = require('./zelda.json')
-        this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: this.state.cycle })
+        this.setState({ cyclePickleRick: [
+            { label: "Rick", name: "rick", checked: true },
+            { label: "Pickle 1", name: "pickle", checked: false },
+            { label: "Pickle 2", name: "picklle", checked: false }
+        ], pitch: this.state.pitch, cycle: this.state.cycle })
 
         // json.tracks[0].notes.forEach(element => {
         //     if (!allNotes.includes(element.name)) {
@@ -362,10 +366,35 @@ class Home extends Component {
 
     createCheckbox() {
         let checkbox = [];
+
+        let checked = 0;
+
         this.state.cyclePickleRick.forEach(element => {
-            checkbox.push(<Checkbox id={element.label} label={element.label} checked={element.checked} onChange={this.handleInputChange} />);
-            checkbox.push(<br />);
-        })
+            if(element.checked) {
+                checked++;
+            }
+        });
+        
+        // If there is only one checkbox remaining, disable it so that at least one option remains checked at all times
+        if(checked > 1) {
+            this.state.cyclePickleRick.forEach(element => {
+                checkbox.push(<Checkbox id={element.label} label={element.label} checked={element.checked} onChange={this.handleInputChange} />);
+                checkbox.push(<br />);
+            })
+        }
+        else {
+            this.state.cyclePickleRick.forEach(element => {
+                if(element.checked) {
+                    checkbox.push(<Checkbox id={element.label} label={element.label} checked={element.checked} disabled onChange={this.handleInputChange} />); 
+                }
+                else {
+                    checkbox.push(<Checkbox id={element.label} label={element.label} checked={element.checked} onChange={this.handleInputChange} />);
+                }
+                
+                checkbox.push(<br />);
+            })
+        }
+
         return checkbox;
     }
 
@@ -382,9 +411,6 @@ class Home extends Component {
                                 </Table.Cell>
                                 <Table.Cell>
                                     {this.createCheckbox()}
-                                    {/* <Checkbox id="Rick" label='Rick ' checked={true} onChange={this.handleInputChange} /><br />
-                                    <Checkbox id="Pickle 1" label='Pickle 1 ' onChange={this.handleInputChange} /><br />
-                                    <Checkbox id="Pickle 2" label='Pickle 2 ' onChange={this.handleInputChange} /> */}
                                 </Table.Cell>
 
                             </Table.Row>
