@@ -35,7 +35,6 @@ class Home extends Component {
             return item.label === event.target.id
         });
         this.state.cyclePickleRick[index].checked = !this.state.cyclePickleRick[index].checked;
-        console.log(this.state.cyclePickleRick)
         this.forceUpdate();
 
     }
@@ -132,12 +131,12 @@ class Home extends Component {
             // this.shiftPitch(1 - (.05 * ((midi - 63 - 12))), "/"+sound).send();
         }
 
-        console.log("key press")
         const key = document.querySelector(`div[data-key="${event.keyCode}"]`);
 
         if (!key) { return; }
-
+        key.classList.add("pressed")
         const keys = document.querySelectorAll('.key, .sharpkey');
+        console.log(keys)
         keys.forEach(key => key.addEventListener('transitionend', this.removeTransition));
 
 
@@ -146,9 +145,6 @@ class Home extends Component {
 
     experimental(json, midiNumber) {
         json.tracks[0].notes.forEach(element => {
-            // console.log(element);
-            // console.log(1 - (.05 * (midiNumber - element.midi)));
-            // console.log(element.time*1000)
             setTimeout(() => {
                 this.shiftPitch(1 - (.05 * (midiNumber - element.midi)), "/rick.wav", element.duration).send();
             }, element.time * 1000);
@@ -159,7 +155,6 @@ class Home extends Component {
         var context = new AudioContext(), request = new XMLHttpRequest();
         request.open("GET", file, true);
         request.responseType = "arraybuffer";
-        console.log("hi")
         request.onload = function () {
             context.decodeAudioData(request.response, onDecoded);
 
@@ -173,8 +168,6 @@ class Home extends Component {
             let shifter = new PitchShifter(context, buffer, 4096);
 
             shifter.on('play', (detail) => {
-                console.log(buffer)
-                console.log(bufferSource)
                 if (detail.percentagePlayed >= 100) {
                     shifter.disconnect(gainNode);
                 }
@@ -251,19 +244,14 @@ class Home extends Component {
             });
         })
 
-        console.log(allNotes)
     }
 
     removeTransition(e) {
         if (e.propertyName !== 'transform') return;
-        console.log(e.keyCode + " transition ended");
         this.classList.remove('pressed');
     }
 
     playNote(note) {
-        console.log("playing note" + note)
-
-
         note = note.replace("#", "sharp")
         this.state.audio = new Audio("./" + this.state.cyclePickleRick[this.state.cycle].name + "_" + note + ".mp3");
 
@@ -299,7 +287,7 @@ class Home extends Component {
     }
 
     onEnd(note) {
-        console.log(note)
+
         // this.state.notes = this.removeFirst(note, this.state.notes);
         this.setState({ cyclePickleRick: this.state.cyclePickleRick, pitch: this.state.pitch, cycle: this.state.cycle, notes: this.removeFirst(note, this.state.notes) });
     }

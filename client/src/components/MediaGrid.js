@@ -5,10 +5,15 @@ import axios from 'axios';
 
 class MediaGrid extends Component {
   state = {
-    redditData: []
+    redditData: [],
+    nextId: null
   }
 
-  getRickAndMorty() {
+  getRickAndMorty(id) {
+    if (id) {
+      return axios.get(`https://www.reddit.com/r/rickandmorty.json?after=` + id);
+    }
+
     return axios.get(`https://www.reddit.com/r/rickandmorty/new.json`)
   }
 
@@ -21,6 +26,29 @@ class MediaGrid extends Component {
       .then(axios.spread((res, mortys) => {
 
         const redditData = [];
+
+        this.getRickAndMorty(res.data.data.children[res.data.data.children.length - 1].data.id).then(res => {
+          res.data.data.children.forEach(element => {
+            let url = element.data.url;
+
+            if (url.endsWith("jpg") || url.endsWith("png") || url.endsWith("gif")) {
+              redditData.push(url);
+            }
+
+          });
+
+          this.getRickAndMorty(res.data.data.children[res.data.data.children.length - 1].data.id).then(res2 => {
+            res2.data.data.children.forEach(element => {
+              let url = element.data.url;
+
+              if (url.endsWith("jpg") || url.endsWith("png") || url.endsWith("gif")) {
+                redditData.push(url);
+              }
+
+            });
+          })
+        })
+
         res.data.data.children.forEach(element => {
           let url = element.data.url;
 
@@ -40,13 +68,11 @@ class MediaGrid extends Component {
         });
 
 
-        this.setState({ redditData });
-        console.log(this.state)
+        this.setState({ redditData, nextId: res.data.data.children[res.data.data.children.length - 1].data.id });
+
       }))
 
-
   }
-
 
 
   createGrid() {
@@ -63,9 +89,9 @@ class MediaGrid extends Component {
 
   render() {
     return (
-        <Grid>
-          {this.createGrid()}
-        </Grid>
+      <Grid>
+        {this.createGrid()}
+      </Grid>
 
 
     )

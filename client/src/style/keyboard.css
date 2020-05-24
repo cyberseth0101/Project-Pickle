@@ -68,8 +68,11 @@
     border:4px solid black;
     color:#fac863;
     text-align: center;
+
     width: 100px;
     padding: 1rem 0.5rem;
+    
+
     transition: all 0.05s;
 }
 
